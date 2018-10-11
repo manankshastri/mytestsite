@@ -21,10 +21,15 @@ class AuthorAdmin(admin.ModelAdmin):
 admin.site.register(Author, AuthorAdmin)
 
 
+class BooksInstanceInline(admin.TabularInline):
+    model = BookInstance
+
+
 # register the admin classes for Book using the decorator
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'display_genre')
+    inlines = [BooksInstanceInline]
 
 
 # register the admin classes for BookInstance using the decorator
