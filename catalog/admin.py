@@ -1,20 +1,26 @@
 from django.contrib import admin
-from .models import Author, Genre, Book, BookInstance
+from .models import Author, Genre, Book, BookInstance, Language
 
 """
 # Register your models here.
 admin.site.register(Book)
 admin.site.register(Author)
-
 admin.site.register(BookInstance)
 """
+admin.site.register(Language)
 admin.site.register(Genre)
+
+
+class BooksInLine(admin.TabularInline):
+    # defines format on inline book insertion
+    model = Book
 
 
 # define the admin class
 class AuthorAdmin(admin.ModelAdmin):
     list_display = ('last_name', 'first_name', 'date_of_birth', 'date_of_death')
     fields = ['first_name', 'last_name', ('date_of_birth', 'date_of_death')]
+    inlines = [BooksInLine]
 
 
 # Register the admin class with associated model

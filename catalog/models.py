@@ -14,6 +14,14 @@ class Genre(models.Model):
         return self.name
 
 
+class Language(models.Model):
+    # model representing the book language
+    name = models.CharField(max_length=200, help_text="Enter the book's natural language")
+
+    def __str__(self):
+        return self.name
+
+
 class Book(models.Model):
     # model representing a book not a specific copy of a book
     title = models.CharField(max_length=200)
@@ -28,6 +36,7 @@ class Book(models.Model):
     # ManyToManyField used because genre can contain many books. Books can cover many genres.
     # Genre class has already been defined so we can specify the object above.
     genre = models.ManyToManyField(Genre, help_text='Select a genre for this book')
+    language = models.ForeignKey('Language', on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         """String for representing the Model object."""
@@ -40,7 +49,7 @@ class Book(models.Model):
     def display_genre(self):
         """create a string for the Genre. This is required to display genre in Admin"""
         return ', '.join(genre.name for genre in self.genre.all()[:3])
-    display_genre.short_description = 'Genre'
+        display_genre.short_description = 'Genre'
 
 
 class BookInstance(models.Model):
@@ -51,7 +60,7 @@ class BookInstance(models.Model):
     borrower = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
     LOAN_STATUS = (
-        ('m', 'Maintenance'),
+        ('d', 'Maintenance'),
         ('o', 'On loan'),
         ('a', 'Available'),
         ('r', 'Reserved')
@@ -59,7 +68,7 @@ class BookInstance(models.Model):
 
     status = models.CharField(
         max_length=1, choices=LOAN_STATUS,
-        blank=True, default='m',
+        blank=True, default='d',
         help_text='Book Availability'
     )
 
